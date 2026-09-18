@@ -1,0 +1,66 @@
+RAMAMANO WEBSITE V3 — PRODUCTION & MARKETING CHECKLIST
+=======================================================
+SITE CREATED
+- Existing V2 pages retained
+- New SEO landing pages:
+  ISO 27001, SOC 2, HIPAA, HITRUST, PCI DSS, DPDPA, VAPT, Managed SOC
+- Privacy Policy and Website Terms templates
+- Unique titles/descriptions, canonical URLs, OpenGraph metadata
+- ProfessionalService JSON-LD on new production pages
+- robots.txt and XML sitemap
+- WhatsApp/contact conversion paths
+
+BEFORE GO-LIVE
+1. Confirm company claims, certifications, partner/empanelment status and staff credentials.
+2. Replace # social placeholders with official LinkedIn/Facebook/Instagram URLs.
+3. Replace mailto forms with a secure backend/API form and spam protection.
+4. Review Privacy Policy and Terms with counsel and update for actual analytics/cookies/vendors.
+5. Add analytics IDs only after account setup and consent configuration where required.
+6. Host the logo locally rather than relying on the old live-site URL.
+7. Add favicon, OG sharing image and high-quality service imagery.
+8. Test every page on desktop/mobile and run accessibility/performance checks.
+9. Deploy to staging first; only then replace production.
+
+GOOGLE SETUP
+- Verify ramamano.com in Google Search Console.
+- Submit https://ramamano.com/sitemap.xml
+- Inspect the home page and key landing pages after deployment.
+- Set up Google Analytics 4 if desired and configure consent/privacy correctly.
+
+90-DAY ORGANIC CONTENT PLAN
+Weeks 1-4: authority
+- ISO 27001: 5 common evidence gaps
+- SOC 2 vs ISO 27001
+- Entra ID security checklist
+- HIPAA cloud-security basics
+- vCISO: when an SME needs one
+- Incident-response readiness checklist
+- DPDPA operational readiness
+- AWS/Azure cloud misconfiguration risks
+
+Weeks 5-8: lead generation
+- Downloadable ISO 27001 readiness checklist
+- SOC 2 readiness self-assessment
+- Cloud security mini assessment
+- IAM access-review checklist
+- Vendor-risk questionnaire
+- Monthly webinar: “Audit Ready in 90 Days”
+- Case-study format posts (use only verified client results)
+
+Weeks 9-12: conversion
+- Compliance360 early-access campaign
+- Free 30-minute compliance scoping call
+- Free cloud-security posture discussion
+- Executive vCISO briefing
+- Healthcare security readiness campaign
+
+WEEKLY SOCIAL CADENCE
+Mon: educational carousel / security tip
+Wed: compliance explainer / checklist
+Fri: expert insight, case study or consultation CTA
+Monthly: webinar + long-form LinkedIn article
+
+PRIMARY CTA
+Free Security & Compliance Consultation
+SECONDARY CTA
+Download Checklist / Start Readiness Assessment

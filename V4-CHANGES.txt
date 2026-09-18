@@ -1,0 +1,1 @@
+Added dedicated Email Security and Proxy/Secure Web Gateway pages, including Microsoft 365, Defender for Office 365, Google Workspace/Gmail, Zoho Mail, Check Point, Cisco Secure Email/IronPort, SPF/DKIM/DMARC, proxy, URL filtering, SSL inspection, cloud/hybrid SWG and managed proxy operations. Updated Cybersecurity page and sitemap.

@@ -1,0 +1,9 @@
+DEPLOYMENT
+1. Back up the existing ramamano.com site.
+2. Upload this package to a staging subdomain first.
+3. Review claims, contact information, social URLs, privacy/terms and forms.
+4. Configure a real server-side form handler before production.
+5. Test all navigation, responsive layouts, email/WhatsApp actions.
+6. Deploy contents to the website document root.
+7. Verify HTTPS and redirects.
+8. Submit sitemap.xml in Google Search Console and inspect key URLs.
