@@ -1,0 +1,16 @@
+RamaMano V9 - GitHub Pages CSS Fix
+
+This build embeds the site CSS and menu JavaScript directly into every HTML page.
+It does not depend on /assets/styles.css for page layout, so the unstyled-page problem is eliminated.
+
+IMPORTANT UPLOAD METHOD
+1. Open this ZIP.
+2. Open the RamaMano_Website_V9_GitHub_NoCSSIssue folder.
+3. Upload the CONTENTS of that folder to the ROOT of the GitHub Pages repository.
+4. index.html and CNAME must be visible at repository root.
+5. Commit the changes.
+6. In GitHub Settings > Pages, confirm the publishing source/branch points to that root.
+7. Hard refresh the site (Ctrl+F5).
+
+Microsoft Forms is already embedded in contact.html.
+CNAME remains ramamano.com.
