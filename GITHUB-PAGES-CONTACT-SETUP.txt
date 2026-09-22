@@ -1,0 +1,18 @@
+RAMAMANO GITHUB PAGES CONTACT FORM SETUP
+
+This package is designed for GitHub Pages and has no PHP dependency.
+
+REQUIRED ONE-TIME STEP
+1. Go to https://web3forms.com/
+2. Create an access key for info@ramamano.com and verify that email address.
+3. Open contact.html.
+4. Replace YOUR_WEB3FORMS_ACCESS_KEY with the access key you receive.
+5. Commit/push the files to your GitHub repository.
+
+Flow: visitor -> ramamano.com/contact.html -> Web3Forms API -> info@ramamano.com.
+The visitor stays on your page; Gmail/Outlook is not opened. An on-page success/error message is shown.
+
+The form includes a honeypot botcheck. Never put an email password, SMTP password, or GitHub token in HTML/JavaScript.
+
+HTTPS: Repository > Settings > Pages > Enforce HTTPS once GitHub has issued the certificate for your custom domain.
+Keep the CNAME file for ramamano.com.

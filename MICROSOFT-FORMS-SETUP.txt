@@ -1,0 +1,20 @@
+RamaMano Website V8 - Microsoft Forms Contact Integration
+
+The contact page now embeds the Microsoft Form supplied by RamaMano.
+No PHP or Web3Forms is required. This is compatible with GitHub Pages.
+
+Microsoft Form:
+RamaMano – Request a Consultation
+
+Important Microsoft Forms settings:
+- Anyone can respond: ON
+- Accept responses: ON
+- Get email notification of each response: ON
+
+Deployment:
+1. Replace the existing GitHub Pages files with this package (or at minimum replace contact.html).
+2. Commit/push the changes.
+3. Open https://ramamano.com/contact.html and submit a test enquiry.
+4. Verify the response appears in Microsoft Forms and the configured notification mailbox receives the notification.
+
+The mailto links shown as contact information remain normal clickable email links. The consultation form itself does not use mailto and will not open the visitor's email application.
