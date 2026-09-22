@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RamaMano Invoice Business</title>
+<style>
+:root{--navy:#0f2e5a;--blue:#0877b9;--cyan:#00a7d6;--green:#4d9b45;--bg:#f3f6fa;--line:#d8e0e9;--text:#1c2938}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}.hidden{display:none!important}
+.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#0f2e5a,#0877b9)}
+.login-card{width:min(430px,92vw);background:#fff;padding:34px;border-radius:18px;box-shadow:0 25px 60px #0004}
+.brand{font-size:30px;font-weight:800;color:var(--navy)}.muted{color:#66758a}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+input,select,textarea{padding:10px;border:1px solid #cfd8e3;border-radius:7px;background:#fff}textarea{min-height:70px}
+.btn{border:0;border-radius:7px;padding:10px 15px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}.btn.alt{background:#64748b}.btn.green{background:#238636}.btn.red{background:#c0392b}.btn.orange{background:#d97706}
+.app{display:none}.top{height:64px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:5}
+.shell{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 64px)}.side{background:#fff;border-right:1px solid var(--line);padding:18px}
+.side button{width:100%;text-align:left;margin:5px 0;background:transparent;color:#334155;border:0;padding:11px;border-radius:7px;cursor:pointer}.side button.active,.side button:hover{background:#eaf4fb;color:var(--blue);font-weight:700}
+.main{padding:22px;overflow:auto}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:18px;box-shadow:0 3px 12px #1e293b0b}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.span2{grid-column:span 2}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.stat{padding:18px;border-radius:12px;background:#fff;border:1px solid var(--line)}.stat b{font-size:26px;color:var(--navy)}
+table{width:100%;border-collapse:collapse}th,td{border:1px solid #d7dee8;padding:8px;font-size:13px}th{background:#edf3f8;text-align:left}.right{text-align:right}.center{text-align:center}
+.invoice-paper{width:210mm;min-height:270mm;margin:0 auto;background:#fff;padding:8mm;border:1px solid #d6dde5;box-shadow:0 8px 30px #0002}
+.inv-head{display:flex;justify-content:space-between;border-bottom:2px solid var(--navy);padding-bottom:8px}.inv-brand{display:flex;gap:12px;align-items:center}.logo{width:70px;height:70px;object-fit:contain}.doc-title{text-align:right}.doc-title h1{margin:0;color:var(--navy);font-size:26px}.mini{font-size:11px;line-height:1.45}
+.boxes{display:grid;grid-template-columns:1fr 1fr;border:1px solid #333;margin-top:8px}.ibox{padding:8px;min-height:105px}.ibox+ .ibox{border-left:1px solid #333}
+.inv-table{margin-top:8px}.inv-table th{background:#e7edf4;color:#111}.totals{margin-left:auto;width:48%;margin-top:8px}.words,.footbox{border:1px solid #333;padding:7px;margin-top:8px}.footer-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.sign{height:80px;text-align:right;padding-top:45px}.sigimg{max-height:48px;max-width:140px;display:block;margin-left:auto}
+.badge{display:inline-block;padding:3px 7px;border-radius:99px;background:#e8f4fd;color:#08689d;font-size:11px;font-weight:700}
+.item-edit{display:grid;grid-template-columns:2.2fr .8fr .55fr .8fr .55fr auto;gap:6px;margin:6px 0}.item-edit input{min-width:0}
+.small{font-size:12px}.notice{background:#fff8dc;border:1px solid #ead78d;padding:10px;border-radius:8px}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.side{display:flex;overflow:auto}.side button{min-width:130px}.grid{grid-template-columns:1fr 1fr}.invoice-paper{width:100%;min-height:0}.item-edit{grid-template-columns:1fr 1fr}.main{padding:10px}}
+@media print{
+ @page{size:A4;margin:7mm}
+ body{background:#fff}.top,.side,.no-print,.editor,.screen-only{display:none!important}.shell{display:block}.main{padding:0}.panel{border:0;box-shadow:none;padding:0;margin:0}
+ .invoice-paper{width:100%;min-height:0;border:0;box-shadow:none;padding:0;font-size:10.5px}
+ .inv-head{padding-bottom:5px}.logo{width:58px;height:58px}.doc-title h1{font-size:22px}.mini{font-size:9.5px}
+ .boxes{margin-top:5px}.ibox{min-height:88px;padding:5px}.inv-table{margin-top:5px}th,td{padding:4px;font-size:9.5px}
+ .totals{margin-top:5px}.words,.footbox{padding:5px;margin-top:5px}.footer-grid{gap:5px;margin-top:5px}.sign{height:55px;padding-top:28px}
+ .invoice-paper.compact th,.invoice-paper.compact td{padding:3px;font-size:8.7px}
+ .invoice-paper.compact .mini{font-size:8.7px}.invoice-paper.compact .ibox{min-height:75px}
+ .inv-head,.boxes,.totals,.words,.footer-grid,.sign{break-inside:avoid;page-break-inside:avoid}
+ tr{break-inside:avoid;page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<section id="login" class="login">
+ <div class="login-card"><div class="brand">RamaMano</div><h2>Invoice Business</h2><p class="muted">Quotation • Proforma • Tax Invoice</p>
+ <div class="field"><label>Password</label><input id="pwd" type="password" autocomplete="current-password"></div>
+ <button class="btn" style="width:100%" onclick="login()">Login</button><p id="loginMsg" class="small" style="color:#b91c1c"></p>
+ <p class="small muted">HTML-only protection is a convenience lock, not server-grade security. Change the password in Settings.</p></div>
+</section>
+<section id="app" class="app">
+<header class="top"><div><b>RamaMano</b> Invoice Business</div><div><span id="fyTop"></span> &nbsp; <button class="btn alt" onclick="logout()">Logout</button></div></header>
+<div class="shell">
+<nav class="side no-print">
+ <button class="active" onclick="showView('dashboard',this)">Dashboard</button>
+ <button onclick="showView('create',this)">Create Document</button>
+ <button onclick="showView('documents',this)">Documents</button>
+ <button onclick="showView('customers',this)">Customers</button>
+ <button onclick="showView('settings',this)">Settings</button>
+ <button onclick="exportData()">Backup / Export</button>
+</nav>
+<main class="main">
+<section id="dashboard" class="view">
+ <h2>Business Dashboard</h2><div class="grid">
+ <div class="stat"><span>Customers</span><br><b id="statCustomers">0</b></div>
+ <div class="stat"><span>Quotations</span><br><b id="statQuotes">0</b></div>
+ <div class="stat"><span>Proforma</span><br><b id="statProforma">0</b></div>
+ <div class="stat"><span>Tax Invoices</span><br><b id="statInvoices">0</b></div></div>
+ <div class="panel" style="margin-top:16px"><h3>Recent Documents</h3><div id="recentDocs"></div></div>
+</section>
+
+<section id="create" class="view hidden">
+ <div class="editor no-print">
+ <h2>Create / Edit Document</h2>
+ <div class="panel"><div class="grid">
+  <div class="field"><label>Document Type</label><select id="docType" onchange="onTypeChange()"><option value="quotation">Quotation</option><option value="proforma">Proforma Invoice</option><option value="tax">Tax Invoice</option></select></div>
+  <div class="field"><label>Document No.</label><input id="docNo"></div>
+  <div class="field"><label>Date</label><input id="docDate" type="date"></div>
+  <div class="field"><label>Due / Valid Until</label><input id="dueDate" type="date"></div>
+  <div class="field"><label>Customer</label><select id="customerSelect" onchange="selectCustomer()"></select></div>
+  <div class="field"><label>Customer Name</label><input id="custName"></div>
+  <div class="field"><label>GSTIN</label><input id="custGstin" maxlength="15" style="text-transform:uppercase" placeholder="15-character GSTIN"></div>
+  <div class="field"><label>State</label><input id="custState" placeholder="Telangana"></div>
+  <div class="field span2"><label>Billing Address</label><textarea id="custAddress"></textarea></div>
+  <div class="field"><label>Place of Supply</label><input id="placeSupply"></div>
+  <div class="field"><label>Reverse Charge</label><select id="reverseCharge"><option>No</option><option>Yes</option></select></div>
+  <div class="field"><label>PO / Reference No.</label><input id="reference"></div>
+  <div class="field"><label>Payment Status</label><select id="paymentStatus"><option>Unpaid</option><option>Part Paid</option><option>Paid</option><option>Not Applicable</option></select></div><div class="field"><label>Customer Master</label><button type="button" class="btn green" onclick="saveCurrentCustomer()">Save / Update Customer</button></div>
+ </div></div>
+ <div class="panel"><h3>Items / Services</h3><div id="itemEditor"></div><button class="btn" onclick="addItem()">+ Add Item</button></div>
+ <div class="panel"><div class="grid2">
+  <div class="field"><label>Terms & Conditions</label><textarea id="terms"></textarea></div>
+  <div class="field"><label>Notes</label><textarea id="notes"></textarea></div>
+ </div>
+ <div class="actions"><button class="btn green" onclick="saveDocument()">Save Document</button><button class="btn" onclick="renderPreview()">Update Preview</button><button class="btn orange" onclick="convertDocument()">Convert to Next Stage</button><button class="btn alt" onclick="printDoc()">Print / Save PDF</button><button class="btn red" onclick="newDocument()">New</button></div>
+ <div class="notice small">IRN/e-Invoice fields are placeholders only. This HTML tool does not submit to the GST Invoice Registration Portal or generate an authenticated IRN/QR code.</div>
+ </div></div>
+ <div class="panel"><div id="invoicePaper" class="invoice-paper"></div></div>
+</section>
+
+<section id="documents" class="view hidden"><h2>Document Register</h2><div class="panel">
+ <div class="grid no-print"><div class="field"><label>Search</label><input id="docSearch" oninput="renderDocuments()" placeholder="Number, customer, GSTIN"></div><div class="field"><label>Type</label><select id="docFilter" onchange="renderDocuments()"><option value="">All</option><option value="quotation">Quotation</option><option value="proforma">Proforma</option><option value="tax">Tax Invoice</option></select></div></div>
+ <div id="documentList"></div></div></section>
+
+<section id="customers" class="view hidden"><h2>Customer Master</h2><div class="panel no-print"><div class="grid">
+ <input id="cmName" placeholder="Customer / Company name"><input id="cmGstin" placeholder="GSTIN"><input id="cmState" placeholder="State"><input id="cmPhone" placeholder="Phone">
+ <input id="cmEmail" placeholder="Email"><textarea id="cmAddress" class="span2" placeholder="Billing address"></textarea></div><button class="btn green" onclick="saveCustomer()">Save Customer</button></div><div class="panel" id="customerList"></div></section>
+
+<section id="settings" class="view hidden"><h2>Business Settings</h2><div class="panel"><div class="grid">
+ <div class="field"><label>Business Name</label><input id="sName"></div><div class="field"><label>Tagline</label><input id="sTagline"></div><div class="field"><label>GSTIN</label><input id="sGstin"></div><div class="field"><label>State</label><input id="sState"></div><div class="field"><label>Website</label><input id="sWebsite"></div>
+ <div class="field span2"><label>Address</label><textarea id="sAddress"></textarea></div><div class="field"><label>Phone</label><input id="sPhone"></div><div class="field"><label>Email</label><input id="sEmail"></div>
+ <div class="field"><label>Bank</label><input id="sBank"></div><div class="field"><label>Account Name</label><input id="sAccountName"></div><div class="field"><label>Account No.</label><input id="sAccount"></div><div class="field"><label>IFSC</label><input id="sIfsc"></div>
+ <div class="field"><label>New Password</label><input id="sPassword" type="password"></div><div class="field"><label>Default GST %</label><input id="sGst" type="number"></div>
+ <div class="field"><label>Logo</label><input type="file" accept="image/*" onchange="loadAsset(event,'logo')"></div><div class="field"><label>Signature</label><input type="file" accept="image/*" onchange="loadAsset(event,'signature')"></div>
+ </div><button class="btn green" onclick="saveSettings()">Save Settings</button></div>
+ <div class="panel"><h3>Restore Backup</h3><input type="file" accept=".json" onchange="importData(event)"></div></section>
+</main></div></section>
+<script>
+const K={settings:'rm_inv_settings_v3',customers:'rm_inv_customers_v3',docs:'rm_inv_docs_v3',counters:'rm_inv_counters_v3',auth:'rm_inv_auth_v3'};
+const defaults={tagline:'IT SERVICES',name:'RamaMano',gstin:'36APYPM8922J1ZZ',state:'Telangana',address:'',website:'https://ramamano.com/',phone:'',email:'',bank:'ICICI Bank',accountName:'MUTHYALA VISHNU VARDHAN RAO',account:'142001555814',ifsc:'ICIC0001420',gst:18,password:'RamaMano@2026',logo:'',signature:''};
+let settings=load(K.settings,defaults), customers=load(K.customers,[]), docs=load(K.docs,[]), items=[];
+
+const PREVIOUS_CUSTOMERS=[
+ {id:900001,name:'INCESSANT HEALTH CARE PRIVATE LIMITED',gstin:'36AAFCI1648H1ZV',state:'Telangana',phone:'',email:'',address:''},
+ {id:900002,name:'AUGUSTUS HEALTHCARE MANAGEMENT LLP',gstin:'',state:'',phone:'',email:'',address:''},
+ {id:900003,name:'GNR SOLUTION PRIVATE LIMITED',gstin:'',state:'',phone:'',email:'',address:''}
+];
+function seedPreviousCustomers(){
+ let changed=false;
+ PREVIOUS_CUSTOMERS.forEach(seed=>{
+   let ix=customers.findIndex(c=>(seed.gstin&&c.gstin===seed.gstin)||String(c.name||'').trim().toUpperCase()===seed.name);
+   if(ix<0){customers.push({...seed});changed=true;}
+   else{
+     ['gstin','state','phone','email','address'].forEach(k=>{
+       if(!customers[ix][k] && seed[k]){customers[ix][k]=seed[k];changed=true;}
+     });
+   }
+ });
+ if(changed)store(K.customers,customers);
+}
+
+function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}} function store(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function esc(v=''){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function login(){if(document.getElementById('pwd').value===settings.password){sessionStorage.setItem(K.auth,'1');openApp()}else document.getElementById('loginMsg').textContent='Incorrect password.'}
+function openApp(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';document.getElementById('fyTop').textContent='FY '+financialYear(new Date());seedPreviousCustomers();refreshAll();newDocument()}
+function logout(){sessionStorage.removeItem(K.auth);location.reload()}
+function showView(id,b){document.querySelectorAll('.view').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.side button').forEach(x=>x.classList.remove('active'));if(b)b.classList.add('active');refreshAll()}
+function financialYear(d){let y=d.getFullYear(),m=d.getMonth()+1;return m>=4?`${y}-${String(y+1).slice(-2)}`:`${y-1}-${String(y).slice(-2)}`}
+function nextNo(type,date=new Date(),commit=false){let fy=financialYear(date),p=type==='quotation'?'QUO':type==='proforma'?'PI':'RMS',key=type+'_'+fy,c=load(K.counters,{}),n=(c[key]||0)+1;if(commit){c[key]=n;store(K.counters,c)}return `${p}/${fy}/${String(n).padStart(3,'0')}`}
+function dateISO(d){return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function newDocument(){let t=document.getElementById('docType')?.value||'quotation',today=new Date(),due=new Date();due.setDate(today.getDate()+30);items=[{description:'',hsn:'998314',qty:1,rate:0,gst:settings.gst}];if(document.getElementById('docNo')){docNo.value=nextNo(t,today,false);docDate.value=dateISO(today);dueDate.value=dateISO(due);custName.value='';custGstin.value='';custState.value='';custAddress.value='';placeSupply.value=settings.state;reference.value='';reverseCharge.value='No';paymentStatus.value=t==='tax'?'Unpaid':'Not Applicable';terms.value='1. Payment due within 30 days from invoice date.\n2. All services subject to standard terms.';notes.value='';renderItemEditor();renderPreview()}}
+function onTypeChange(){docNo.value=nextNo(docType.value,new Date(docDate.value||Date.now()),false);paymentStatus.value=docType.value==='tax'?'Unpaid':'Not Applicable';renderPreview()}
+function addItem(){items.push({description:'',hsn:'',qty:1,rate:0,gst:settings.gst});renderItemEditor()}
+function renderItemEditor(){itemEditor.innerHTML=items.map((x,i)=>`<div class="item-edit"><input placeholder="Description" value="${esc(x.description)}" oninput="setItem(${i},'description',this.value)"><input placeholder="HSN/SAC" value="${esc(x.hsn)}" oninput="setItem(${i},'hsn',this.value)"><input type="number" min="0" step=".01" value="${x.qty}" oninput="setItem(${i},'qty',this.value)"><input type="number" min="0" step=".01" value="${x.rate}" oninput="setItem(${i},'rate',this.value)"><input type="number" min="0" step=".01" value="${x.gst}" oninput="setItem(${i},'gst',this.value)"><button class="btn red" onclick="removeItem(${i})">×</button></div>`).join('')}
+function setItem(i,k,v){items[i][k]=['qty','rate','gst'].includes(k)?(+v||0):v;renderPreview()} function removeItem(i){if(items.length>1)items.splice(i,1);renderItemEditor();renderPreview()}
+function stateSame(){return (custState.value||'').trim().toLowerCase()===(settings.state||'').trim().toLowerCase()}
+function money(n){return '₹ '+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function totals(){let taxable=0,tax=0;items.forEach(x=>{let a=x.qty*x.rate;taxable+=a;tax+=a*x.gst/100});return{taxable,tax,total:taxable+tax}}
+function numberWords(n){const a=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],b=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];function w(x){if(x<20)return a[x];if(x<100)return b[Math.floor(x/10)]+(x%10?' '+a[x%10]:'');if(x<1000)return a[Math.floor(x/100)]+' Hundred'+(x%100?' '+w(x%100):'');if(x<100000)return w(Math.floor(x/1000))+' Thousand'+(x%1000?' '+w(x%1000):'');if(x<10000000)return w(Math.floor(x/100000))+' Lakh'+(x%100000?' '+w(x%100000):'');return w(Math.floor(x/10000000))+' Crore'+(x%10000000?' '+w(x%10000000):'')}return 'Indian Rupees '+(w(Math.round(n))||'Zero')+' Only'}
+function docLabel(t){return t==='quotation'?'QUOTATION':t==='proforma'?'PROFORMA INVOICE':'TAX INVOICE'}
+function renderPreview(){if(!document.getElementById('invoicePaper'))return;let t=totals(),same=stateSame(),cg=same?t.tax/2:0,sg=cg,ig=same?0:t.tax;invoicePaper.classList.toggle('compact',items.length>8);
+invoicePaper.innerHTML=`<div class="inv-head"><div class="inv-brand">${settings.logo?`<img class="logo" src="${settings.logo}">`:''}<div><b style="font-size:20px">${esc(settings.name)}</b><div class="mini"><b>${esc(settings.tagline||'')}</b><br>${esc(settings.address)}<br>GSTIN: <b>${esc(settings.gstin)}</b><br>${esc(settings.phone)} | ${esc(settings.email)}<br>${esc(settings.website)}</div></div></div><div class="doc-title"><h1>${docLabel(docType.value)}</h1><div class="mini"><b>No:</b> ${esc(docNo.value)}<br><b>Date:</b> ${esc(docDate.value)}<br><b>${docType.value==='quotation'?'Valid Until':'Due Date'}:</b> ${esc(dueDate.value)}<br><b>FY:</b> ${financialYear(new Date(docDate.value||Date.now()))}</div></div></div>
+<div class="boxes"><div class="ibox mini"><b>Bill To</b><br><b>${esc(custName.value||'Customer Name')}</b><br>${esc(custAddress.value).replace(/\n/g,'<br>')}<br>GSTIN: ${esc(custGstin.value||'-')}<br>State: ${esc(custState.value||'-')}</div><div class="ibox mini"><b>Supply / Reference</b><br>Place of Supply: ${esc(placeSupply.value||custState.value||'-')}<br>Tax: ${same?'CGST + SGST':'IGST'}<br>Reverse Charge: ${esc(reverseCharge.value)}<br>PO / Ref: ${esc(reference.value||'-')}<br>${docType.value==='tax'?'Payment Status: '+esc(paymentStatus.value):''}</div></div>
+<table class="inv-table"><thead><tr><th>#</th><th>Description</th><th>HSN/SAC</th><th class="right">Qty</th><th class="right">Rate</th><th class="right">GST %</th><th class="right">Taxable</th></tr></thead><tbody>${items.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.description||'-')}</td><td>${esc(x.hsn)}</td><td class="right">${x.qty}</td><td class="right">${money(x.rate)}</td><td class="right">${x.gst}%</td><td class="right">${money(x.qty*x.rate)}</td></tr>`).join('')}</tbody></table>
+<table class="totals"><tr><td>Taxable Value</td><td class="right">${money(t.taxable)}</td></tr>${same?`<tr><td>CGST</td><td class="right">${money(cg)}</td></tr><tr><td>SGST</td><td class="right">${money(sg)}</td></tr>`:`<tr><td>IGST</td><td class="right">${money(ig)}</td></tr>`}<tr><th>Grand Total</th><th class="right">${money(t.total)}</th></tr></table>
+<div class="words mini"><b>Amount in Words:</b> ${numberWords(t.total)}</div><div class="footer-grid"><div class="footbox mini"><b>Bank Details</b><br>${esc(settings.bank)}<br>A/c Name: ${esc(settings.accountName)}<br>A/c No: ${esc(settings.account)}<br>IFSC: ${esc(settings.ifsc)}</div><div class="footbox mini"><b>Terms / Notes</b><br>${esc(terms.value).replace(/\n/g,'<br>')}${notes.value?'<br>'+esc(notes.value).replace(/\n/g,'<br>'):''}</div></div>
+<div class="sign mini">${settings.signature?`<img class="sigimg" src="${settings.signature}">`:''}For ${esc(settings.name)}<br><b>Authorized Signatory</b></div><div class="mini" style="text-align:center;border-top:1px solid #aaa;padding-top:4px">This is a computer-generated document.</div>`}
+function collect(){return{id:Date.now(),type:docType.value,no:docNo.value,date:docDate.value,due:dueDate.value,customer:{name:custName.value,gstin:custGstin.value,state:custState.value,address:custAddress.value},place:placeSupply.value,reverse:reverseCharge.value,reference:reference.value,payment:paymentStatus.value,terms:terms.value,notes:notes.value,items:JSON.parse(JSON.stringify(items)),total:totals().total,created:new Date().toISOString()}}
+function saveDocument(){renderPreview();let d=collect(),idx=docs.findIndex(x=>x.no===d.no);if(idx<0){let expected=nextNo(d.type,new Date(d.date||Date.now()),true);if(d.no===nextNo(d.type,new Date(d.date||Date.now()),false)||!d.no)d.no=expected;docNo.value=d.no;docs.unshift(d)}else docs[idx]=d;store(K.docs,docs);renderDocuments();updateDashboard();alert('Saved: '+d.no)}
+function convertDocument(){if(docType.value==='tax'){alert('This is already a Tax Invoice.');return}let old=collect(),next=docType.value==='quotation'?'proforma':'tax';docType.value=next;docNo.value=nextNo(next,new Date(docDate.value||Date.now()),false);paymentStatus.value=next==='tax'?'Unpaid':'Not Applicable';notes.value=(notes.value?notes.value+'\n':'')+'Converted from '+old.no;renderPreview()}
+function printDoc(){renderPreview();window.print()}
+function selectCustomer(){let c=customers.find(x=>String(x.id)===customerSelect.value);if(!c)return;custName.value=c.name;custGstin.value=c.gstin;custState.value=c.state;custAddress.value=c.address;placeSupply.value=c.state;renderPreview()}
+
+function saveCurrentCustomer(){
+ let name=custName.value.trim(),gstin=custGstin.value.trim().toUpperCase(),state=custState.value.trim(),address=custAddress.value.trim();
+ if(!name)return alert('Customer name required.');
+ if(gstin && !/^[0-9]{2}[A-Z0-9]{13}$/.test(gstin)) {
+   if(!confirm('GSTIN format does not look valid. Save customer anyway?')) return;
+ }
+ let ix=customers.findIndex(c=>(gstin&&c.gstin===gstin)||String(c.name||'').trim().toUpperCase()===name.toUpperCase());
+ let c={id:ix>=0?customers[ix].id:Date.now(),name,gstin,state,phone:ix>=0?(customers[ix].phone||''):'',email:ix>=0?(customers[ix].email||''):'',address};
+ if(ix>=0)customers[ix]=c; else customers.unshift(c);
+ store(K.customers,customers);populateCustomers();renderCustomers();updateDashboard();
+ customerSelect.value=String(c.id);
+ alert('Customer saved / updated.');
+}
+
+function saveCustomer(){let c={id:Date.now(),name:cmName.value.trim(),gstin:cmGstin.value.trim().toUpperCase(),state:cmState.value.trim(),phone:cmPhone.value.trim(),email:cmEmail.value.trim(),address:cmAddress.value.trim()};if(!c.name)return alert('Customer name required.');let ix=customers.findIndex(x=>x.gstin&&x.gstin===c.gstin);if(ix>=0){c.id=customers[ix].id;customers[ix]=c}else customers.unshift(c);store(K.customers,customers);['cmName','cmGstin','cmState','cmPhone','cmEmail','cmAddress'].forEach(id=>document.getElementById(id).value='');renderCustomers();populateCustomers();updateDashboard()}
+function renderCustomers(){customerList.innerHTML=customers.length?`<table><tr><th>Name</th><th>GSTIN</th><th>State</th><th>Contact</th><th></th></tr>${customers.map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.gstin)}</td><td>${esc(c.state)}</td><td>${esc(c.phone)}<br>${esc(c.email)}</td><td><button class="btn red" onclick="deleteCustomer(${c.id})">Delete</button></td></tr>`).join('')}</table>`:'No customers saved.'}
+function deleteCustomer(id){if(confirm('Delete customer?')){customers=customers.filter(x=>x.id!==id);store(K.customers,customers);renderCustomers();populateCustomers();updateDashboard()}}
+function populateCustomers(){customerSelect.innerHTML='<option value="">-- Select saved customer --</option>'+customers.map(c=>`<option value="${c.id}">${esc(c.name)}${c.gstin?' — '+esc(c.gstin):''}</option>`).join('')}
+function renderDocuments(){let q=(docSearch?.value||'').toLowerCase(),f=docFilter?.value||'',list=docs.filter(d=>(!f||d.type===f)&&(!q||(d.no+' '+d.customer.name+' '+d.customer.gstin).toLowerCase().includes(q)));documentList.innerHTML=list.length?`<table><tr><th>Date</th><th>Type</th><th>No.</th><th>Customer</th><th class="right">Total</th><th>Status</th><th></th></tr>${list.map(d=>`<tr><td>${esc(d.date)}</td><td>${docLabel(d.type)}</td><td><b>${esc(d.no)}</b></td><td>${esc(d.customer.name)}<br><span class="small">${esc(d.customer.gstin)}</span></td><td class="right">${money(d.total)}</td><td><span class="badge">${esc(d.payment||'')}</span></td><td><button class="btn" onclick="loadDocument(${d.id})">Open</button> <button class="btn red" onclick="deleteDocument(${d.id})">Delete</button></td></tr>`).join('')}</table>`:'No documents found.'}
+function loadDocument(id){let d=docs.find(x=>x.id===id);if(!d)return;showView('create');docType.value=d.type;docNo.value=d.no;docDate.value=d.date;dueDate.value=d.due;custName.value=d.customer.name;custGstin.value=d.customer.gstin;custState.value=d.customer.state;custAddress.value=d.customer.address;placeSupply.value=d.place;reverseCharge.value=d.reverse;reference.value=d.reference;paymentStatus.value=d.payment;terms.value=d.terms;notes.value=d.notes;items=JSON.parse(JSON.stringify(d.items));renderItemEditor();renderPreview()}
+function deleteDocument(id){if(confirm('Delete this document?')){docs=docs.filter(x=>x.id!==id);store(K.docs,docs);renderDocuments();updateDashboard()}}
+function updateDashboard(){statCustomers.textContent=customers.length;statQuotes.textContent=docs.filter(x=>x.type==='quotation').length;statProforma.textContent=docs.filter(x=>x.type==='proforma').length;statInvoices.textContent=docs.filter(x=>x.type==='tax').length;recentDocs.innerHTML=docs.slice(0,8).map(d=>`<div style="padding:8px;border-bottom:1px solid #eee"><b>${esc(d.no)}</b> — ${esc(d.customer.name)} <span style="float:right">${money(d.total)}</span></div>`).join('')||'No documents yet.'}
+function fillSettings(){sName.value=settings.name;sTagline.value=settings.tagline||'IT SERVICES';sGstin.value=settings.gstin;sState.value=settings.state;sWebsite.value=settings.website;sAddress.value=settings.address;sPhone.value=settings.phone;sEmail.value=settings.email;sBank.value=settings.bank;sAccountName.value=settings.accountName;sAccount.value=settings.account;sIfsc.value=settings.ifsc;sGst.value=settings.gst;sPassword.value=''}
+function saveSettings(){Object.assign(settings,{name:sName.value,tagline:sTagline.value,gstin:sGstin.value.toUpperCase(),state:sState.value,website:sWebsite.value,address:sAddress.value,phone:sPhone.value,email:sEmail.value,bank:sBank.value,accountName:sAccountName.value,account:sAccount.value,ifsc:sIfsc.value,gst:+sGst.value||18});if(sPassword.value)settings.password=sPassword.value;store(K.settings,settings);alert('Settings saved.');renderPreview()}
+function loadAsset(e,type){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{settings[type]=r.result;store(K.settings,settings);renderPreview()};r.readAsDataURL(f)}
+function exportData(){let blob=new Blob([JSON.stringify({version:3,settings,customers,docs,counters:load(K.counters,{})},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='RamaMano-Invoice-Backup-'+dateISO(new Date())+'.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!confirm('Restore this backup and replace current local data?'))return;settings=d.settings||defaults;customers=d.customers||[];docs=d.docs||[];store(K.settings,settings);store(K.customers,customers);store(K.docs,docs);store(K.counters,d.counters||{});refreshAll();alert('Backup restored.')}catch(err){alert('Invalid backup file.')}};r.readAsText(f)}
+function refreshAll(){populateCustomers();renderCustomers();renderDocuments();updateDashboard();fillSettings()}
+document.addEventListener('input',e=>{if(e.target.closest('#create')&&!e.target.closest('#itemEditor'))renderPreview()});
+if(sessionStorage.getItem(K.auth)==='1')openApp();
+</script></body></html>
