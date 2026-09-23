@@ -1,0 +1,7 @@
+RamaMano Website V10
+
+Added pricing.html with all previously proposed prices increased by 15%.
+Added Pricing to site navigation and footer links.
+Pricing page states prices may change based on client requirements and scope.
+Request Quote routes to the existing contact page / Microsoft Forms workflow.
+GitHub Pages structure, CNAME, .nojekyll, branding and existing pages retained.
