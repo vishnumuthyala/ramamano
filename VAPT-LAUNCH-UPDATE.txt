@@ -1,0 +1,15 @@
+RamaMano VAPT Launch Update
+
+Added/updated:
+- Prominent VAPT navigation link across HTML pages
+- Expanded vapt.html with Web, API, Network, Cloud and M365 security offerings
+- New health-check.html lead-generation landing page
+- Homepage Free Cybersecurity Health Check CTA and VAPT promotion
+- Cybersecurity page links directly to VAPT
+- Sitemap entries for VAPT and Health Check
+
+Recommended after deployment:
+1. Test all pages on desktop/mobile.
+2. Confirm Microsoft Forms consultation form receives enquiries.
+3. Publish LinkedIn launch posts linking to https://ramamano.com/vapt.html and /health-check.html.
+4. Do not claim CERT-In empanelment unless formally obtained.
