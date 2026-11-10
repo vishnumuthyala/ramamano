@@ -44,9 +44,9 @@ table{width:100%;border-collapse:collapse}th,td{border:1px solid #d7dee8;padding
 <body>
 <section id="login" class="login">
  <div class="login-card"><div class="brand">RamaMano</div><h2>Invoice Business</h2><p class="muted">Quotation • Proforma • Tax Invoice</p>
- <div class="field"><label>Password</label><input id="pwd" type="password" autocomplete="current-password"></div>
+ <div class="field"><label>Password</label><input id="pwd" type="password" autocomplete="off" name="rm_manual_login_secret"></div>
  <button class="btn" style="width:100%" onclick="login()">Login</button><p id="loginMsg" class="small" style="color:#b91c1c"></p>
- <p class="small muted">HTML-only protection is a convenience lock, not server-grade security. Change the password in Settings.</p></div>
+ <p class="small muted">Passwords are not saved in plaintext by this tool. First login creates a local password; existing users must change their previous password. Browser password managers may still offer to remember passwords. This offline tool does not provide server-grade access control.</p></div>
 </section>
 <section id="app" class="app">
 <header class="top"><div><b>RamaMano</b> Invoice Business</div><div><span id="fyTop"></span> &nbsp; <button class="btn alt" onclick="logout()">Logout</button></div></header>
@@ -61,7 +61,7 @@ table{width:100%;border-collapse:collapse}th,td{border:1px solid #d7dee8;padding
 </nav>
 <main class="main">
 <section id="dashboard" class="view">
- <h2>Business Dashboard</h2><div class="grid">
+ <h2>Business Dashboard</h2><div class="notice small" style="margin-bottom:12px"><b>Data protection:</b> Bills are saved in this browser only, not on a server. Always use <b>Backup / Export</b> after creating invoices. To transfer records to another browser, restore the JSON backup in Settings. Do not clear site data.</div><div class="grid">
  <div class="stat"><span>Customers</span><br><b id="statCustomers">0</b></div>
  <div class="stat"><span>Quotations</span><br><b id="statQuotes">0</b></div>
  <div class="stat"><span>Proforma</span><br><b id="statProforma">0</b></div>
@@ -110,20 +110,20 @@ table{width:100%;border-collapse:collapse}th,td{border:1px solid #d7dee8;padding
  <div class="field"><label>Business Name</label><input id="sName"></div><div class="field"><label>Tagline</label><input id="sTagline"></div><div class="field"><label>GSTIN</label><input id="sGstin"></div><div class="field"><label>State</label><input id="sState"></div><div class="field"><label>Website</label><input id="sWebsite"></div>
  <div class="field span2"><label>Address</label><textarea id="sAddress"></textarea></div><div class="field"><label>Phone</label><input id="sPhone"></div><div class="field"><label>Email</label><input id="sEmail"></div>
  <div class="field"><label>Bank</label><input id="sBank"></div><div class="field"><label>Account Name</label><input id="sAccountName"></div><div class="field"><label>Account No.</label><input id="sAccount"></div><div class="field"><label>IFSC</label><input id="sIfsc"></div>
- <div class="field"><label>New Password</label><input id="sPassword" type="password"></div><div class="field"><label>Default GST %</label><input id="sGst" type="number"></div>
+ <div class="field"><label>New Password</label><input id="sPassword" type="password" autocomplete="new-password" name="rm_new_local_secret"></div><div class="field"><label>Default GST %</label><input id="sGst" type="number"></div>
  <div class="field"><label>Logo</label><input type="file" accept="image/*" onchange="loadAsset(event,'logo')"></div><div class="field"><label>Signature</label><input type="file" accept="image/*" onchange="loadAsset(event,'signature')"></div>
  </div><button class="btn green" onclick="saveSettings()">Save Settings</button></div>
  <div class="panel"><h3>Restore Backup</h3><input type="file" accept=".json" onchange="importData(event)"></div></section>
 </main></div></section>
 <script>
-const K={settings:'rm_inv_settings_v3',customers:'rm_inv_customers_v3',docs:'rm_inv_docs_v3',counters:'rm_inv_counters_v3',auth:'rm_inv_auth_v3'};
-const defaults={tagline:'IT SERVICES',name:'RamaMano',gstin:'36APYPM8922J1ZZ',state:'Telangana',address:'',website:'https://ramamano.com/',phone:'',email:'',bank:'ICICI Bank',accountName:'MUTHYALA VISHNU VARDHAN RAO',account:'142001555814',ifsc:'ICIC0001420',gst:18,password:'RamaMano@2026',logo:'',signature:''};
-let settings=load(K.settings,defaults), customers=load(K.customers,[]), docs=load(K.docs,[]), items=[];
+const K={credential:'rm_inv_credential_v7',settings:'rm_inv_settings_v3',customers:'rm_inv_customers_v3',docs:'rm_inv_docs_v3',counters:'rm_inv_counters_v3',auth:'rm_inv_auth_v3'};
+const defaults={tagline:'IT SERVICES',name:'RamaMano',gstin:'36APYPM8922J1ZZ',state:'Telangana',address:'',website:'https://ramamano.com/',phone:'',email:'',bank:'ICICI Bank',accountName:'MUTHYALA VISHNU VARDHAN RAO',account:'142001555814',ifsc:'ICIC0001420',gst:18,logo:'',signature:''};
+let settings=load(K.settings,defaults), customers=load(K.customers,[]), docs=load(K.docs,[]), items=[], editingId=null;
 
 const PREVIOUS_CUSTOMERS=[
- {id:900001,name:'INCESSANT HEALTH CARE PRIVATE LIMITED',gstin:'36AAFCI1648H1ZV',state:'Telangana',phone:'',email:'',address:''},
- {id:900002,name:'AUGUSTUS HEALTHCARE MANAGEMENT LLP',gstin:'',state:'',phone:'',email:'',address:''},
- {id:900003,name:'GNR SOLUTION PRIVATE LIMITED',gstin:'',state:'',phone:'',email:'',address:''}
+ {id:900001,name:'INCESSANT HEALTH CARE PRIVATE LIMITED',gstin:'33AAHCI0418G1Z0',state:'Tamil Nadu',phone:'',email:'',address:''},
+ {id:900002,name:'AUGUSTUS HEALTHCARE MANAGEMENT LLP',gstin:'36AEQFS4784P1ZT',state:'Telangana',phone:'',email:'',address:''},
+ {id:900003,name:'GNR SOLUTION PRIVATE LIMITED',gstin:'27AAECG2483J1ZE',state:'Maharashtra',phone:'',email:'',address:''}
 ];
 function seedPreviousCustomers(){
  let changed=false;
@@ -139,17 +139,64 @@ function seedPreviousCustomers(){
  if(changed)store(K.customers,customers);
 }
 
-function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}} function store(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}} function store(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert('SAVE FAILED: Browser storage unavailable or full. Export your existing backup immediately. '+e.message);return false}}
 function esc(v=''){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function login(){if(document.getElementById('pwd').value===settings.password){sessionStorage.setItem(K.auth,'1');openApp()}else document.getElementById('loginMsg').textContent='Incorrect password.'}
+
+// Password verifier only: a salted PBKDF2 hash, never the plain password.
+const cryptoBytes=n=>crypto.getRandomValues(new Uint8Array(n));
+const toHex=b=>Array.from(new Uint8Array(b),x=>x.toString(16).padStart(2,'0')).join('');
+async function derivePassword(password,salt,iterations=210000){
+ if(!crypto.subtle)throw Error('Secure cryptography unavailable. Open this page via HTTPS or a supported browser.');
+ const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);
+ return toHex(await crypto.subtle.deriveBits({name:'PBKDF2',salt:Uint8Array.from(salt.match(/../g).map(x=>parseInt(x,16))),iterations,hash:'SHA-256'},key,256));
+}
+async function setLocalPassword(password){
+ if(password.length<12)throw Error('Choose a password of at least 12 characters.');
+ const salt=toHex(cryptoBytes(16)),iterations=210000;
+ const hash=await derivePassword(password,salt,iterations);
+ localStorage.setItem(K.credential,JSON.stringify({salt,iterations,hash}));
+ delete settings.password;
+ store(K.settings,settings);
+}
+async function login(){
+ const input=document.getElementById('pwd'), password=input.value, msg=document.getElementById('loginMsg');
+ msg.textContent='';
+ try{
+  let cred=load(K.credential,null);
+  if(!cred){
+    const legacy=typeof settings.password==='string'?settings.password:null;
+    if(legacy && password!==legacy){msg.textContent='Incorrect previous password.';return;}
+    if(!legacy && !password){msg.textContent='Enter a new password (at least 12 characters) to initialize this tool.';return;}
+    if(legacy){
+      const replacement=prompt('Previous password accepted. Create a NEW password (12+ characters). Your previous password will be removed from browser settings.');
+      if(replacement===null)return;
+      await setLocalPassword(replacement);
+    }else await setLocalPassword(password);
+    cred=load(K.credential,null);
+  }else{
+    const candidate=await derivePassword(password,cred.salt,cred.iterations);
+    if(candidate!==cred.hash){msg.textContent='Incorrect password.';return;}
+  }
+  input.value='';
+  sessionStorage.setItem(K.auth,'1');openApp();
+ }catch(e){msg.textContent=e.message||'Login error.';}
+}
+
 function openApp(){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';document.getElementById('fyTop').textContent='FY '+financialYear(new Date());seedPreviousCustomers();refreshAll();newDocument()}
 function logout(){sessionStorage.removeItem(K.auth);location.reload()}
 function showView(id,b){document.querySelectorAll('.view').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.side button').forEach(x=>x.classList.remove('active'));if(b)b.classList.add('active');refreshAll()}
 function financialYear(d){let y=d.getFullYear(),m=d.getMonth()+1;return m>=4?`${y}-${String(y+1).slice(-2)}`:`${y-1}-${String(y).slice(-2)}`}
-function nextNo(type,date=new Date(),commit=false){let fy=financialYear(date),p=type==='quotation'?'QUO':type==='proforma'?'PI':'RMS',key=type+'_'+fy,c=load(K.counters,{}),n=(c[key]||0)+1;if(commit){c[key]=n;store(K.counters,c)}return `${p}/${fy}/${String(n).padStart(3,'0')}`}
+function nextNo(type,date=new Date(),commit=false){
+ let fy=financialYear(date),p=type==='quotation'?'QUO':type==='proforma'?'PI':'RMS',key=type+'_'+fy,c=load(K.counters,{});
+ let largest=Number(c[key]||0);
+ docs.forEach(d=>{if(d.type!==type)return;let m=String(d.no||'').match(new RegExp('^'+p+'\\/'+fy+'\\/(\\d+)$'));if(m)largest=Math.max(largest,Number(m[1]));});
+ let n=largest+1;
+ if(commit){c[key]=n;store(K.counters,c)}
+ return `${p}/${fy}/${String(n).padStart(3,'0')}`;
+}
 function dateISO(d){return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
-function newDocument(){let t=document.getElementById('docType')?.value||'quotation',today=new Date(),due=new Date();due.setDate(today.getDate()+30);items=[{description:'',hsn:'998314',qty:1,rate:0,gst:settings.gst}];if(document.getElementById('docNo')){docNo.value=nextNo(t,today,false);docDate.value=dateISO(today);dueDate.value=dateISO(due);custName.value='';custGstin.value='';custState.value='';custAddress.value='';placeSupply.value=settings.state;reference.value='';reverseCharge.value='No';paymentStatus.value=t==='tax'?'Unpaid':'Not Applicable';terms.value='1. Payment due within 30 days from invoice date.\n2. All services subject to standard terms.';notes.value='';renderItemEditor();renderPreview()}}
-function onTypeChange(){docNo.value=nextNo(docType.value,new Date(docDate.value||Date.now()),false);paymentStatus.value=docType.value==='tax'?'Unpaid':'Not Applicable';renderPreview()}
+function newDocument(){editingId=null;let t=document.getElementById('docType')?.value||'quotation',today=new Date(),due=new Date();due.setDate(today.getDate()+30);items=[{description:'',hsn:'998314',qty:1,rate:0,gst:settings.gst}];if(document.getElementById('docNo')){docNo.value=nextNo(t,today,false);docDate.value=dateISO(today);dueDate.value=dateISO(due);custName.value='';custGstin.value='';custState.value='';custAddress.value='';placeSupply.value=settings.state;reference.value='';reverseCharge.value='No';paymentStatus.value=t==='tax'?'Unpaid':'Not Applicable';terms.value='1. Payment due within 30 days from invoice date.\n2. All services subject to standard terms.';notes.value='';renderItemEditor();renderPreview()}}
+function onTypeChange(){editingId=null;docNo.value=nextNo(docType.value,new Date(docDate.value||Date.now()),false);paymentStatus.value=docType.value==='tax'?'Unpaid':'Not Applicable';renderPreview()}
 function addItem(){items.push({description:'',hsn:'',qty:1,rate:0,gst:settings.gst});renderItemEditor()}
 function renderItemEditor(){itemEditor.innerHTML=items.map((x,i)=>`<div class="item-edit"><input placeholder="Description" value="${esc(x.description)}" oninput="setItem(${i},'description',this.value)"><input placeholder="HSN/SAC" value="${esc(x.hsn)}" oninput="setItem(${i},'hsn',this.value)"><input type="number" min="0" step=".01" value="${x.qty}" oninput="setItem(${i},'qty',this.value)"><input type="number" min="0" step=".01" value="${x.rate}" oninput="setItem(${i},'rate',this.value)"><input type="number" min="0" step=".01" value="${x.gst}" oninput="setItem(${i},'gst',this.value)"><button class="btn red" onclick="removeItem(${i})">×</button></div>`).join('')}
 function setItem(i,k,v){items[i][k]=['qty','rate','gst'].includes(k)?(+v||0):v;renderPreview()} function removeItem(i){if(items.length>1)items.splice(i,1);renderItemEditor();renderPreview()}
@@ -165,8 +212,35 @@ invoicePaper.innerHTML=`<div class="inv-head"><div class="inv-brand">${settings.
 <table class="totals"><tr><td>Taxable Value</td><td class="right">${money(t.taxable)}</td></tr>${same?`<tr><td>CGST</td><td class="right">${money(cg)}</td></tr><tr><td>SGST</td><td class="right">${money(sg)}</td></tr>`:`<tr><td>IGST</td><td class="right">${money(ig)}</td></tr>`}<tr><th>Grand Total</th><th class="right">${money(t.total)}</th></tr></table>
 <div class="words mini"><b>Amount in Words:</b> ${numberWords(t.total)}</div><div class="footer-grid"><div class="footbox mini"><b>Bank Details</b><br>${esc(settings.bank)}<br>A/c Name: ${esc(settings.accountName)}<br>A/c No: ${esc(settings.account)}<br>IFSC: ${esc(settings.ifsc)}</div><div class="footbox mini"><b>Terms / Notes</b><br>${esc(terms.value).replace(/\n/g,'<br>')}${notes.value?'<br>'+esc(notes.value).replace(/\n/g,'<br>'):''}</div></div>
 <div class="sign mini">${settings.signature?`<img class="sigimg" src="${settings.signature}">`:''}For ${esc(settings.name)}<br><b>Authorized Signatory</b></div><div class="mini" style="text-align:center;border-top:1px solid #aaa;padding-top:4px">This is a computer-generated document.</div>`}
-function collect(){return{id:Date.now(),type:docType.value,no:docNo.value,date:docDate.value,due:dueDate.value,customer:{name:custName.value,gstin:custGstin.value,state:custState.value,address:custAddress.value},place:placeSupply.value,reverse:reverseCharge.value,reference:reference.value,payment:paymentStatus.value,terms:terms.value,notes:notes.value,items:JSON.parse(JSON.stringify(items)),total:totals().total,created:new Date().toISOString()}}
-function saveDocument(){renderPreview();let d=collect(),idx=docs.findIndex(x=>x.no===d.no);if(idx<0){let expected=nextNo(d.type,new Date(d.date||Date.now()),true);if(d.no===nextNo(d.type,new Date(d.date||Date.now()),false)||!d.no)d.no=expected;docNo.value=d.no;docs.unshift(d)}else docs[idx]=d;store(K.docs,docs);renderDocuments();updateDashboard();alert('Saved: '+d.no)}
+function collect(){return{id:editingId??Date.now(),type:docType.value,no:docNo.value,date:docDate.value,due:dueDate.value,customer:{name:custName.value,gstin:custGstin.value,state:custState.value,address:custAddress.value},place:placeSupply.value,reverse:reverseCharge.value,reference:reference.value,payment:paymentStatus.value,terms:terms.value,notes:notes.value,items:JSON.parse(JSON.stringify(items)),total:totals().total,created:new Date().toISOString()}}
+function saveDocument(){
+ renderPreview();let d=collect();
+ if(!d.customer.name.trim())return alert('Please enter customer name before saving.');
+ if(!d.date)return alert('Please select a document date.');
+ const previous=editingId==null?-1:docs.findIndex(x=>String(x.id)===String(editingId));
+ if(previous>=0){
+   if(docs.some((x,i)=>i!==previous&&x.no===d.no))return alert('This document number is already in use.');
+   d.id=docs[previous].id;d.created=docs[previous].created;d.updated=new Date().toISOString();
+   const updated=docs.slice();updated[previous]=d;
+   if(!store(K.docs,updated))return;
+   docs=updated;
+ }else{
+   if(!d.no.trim())d.no=nextNo(d.type,new Date(d.date),false);
+   if(docs.some(x=>x.no===d.no))return alert('Duplicate document number. Choose a unique number.');
+   d.id=Date.now()+Math.floor(Math.random()*1000);
+   const updated=[d,...docs];
+   if(!store(K.docs,updated))return;
+   docs=updated;editingId=d.id;
+ }
+ docNo.value=d.no;
+ // Rebuild counters from the saved document register, so counters cannot drift.
+ const counters=load(K.counters,{}), fy=financialYear(new Date(d.date));
+ const p=d.type==='quotation'?'QUO':d.type==='proforma'?'PI':'RMS';
+ const match=d.no.match(new RegExp('^'+p+'\\/'+fy+'\\/(\\d+)$'));
+ if(match){const key=d.type+'_'+fy;counters[key]=Math.max(Number(counters[key]||0),Number(match[1]));store(K.counters,counters)}
+ renderPreview();renderDocuments();updateDashboard();
+ alert('Saved successfully: '+d.no+'\nStored in this browser. Use Backup / Export to protect your records.');
+}
 function convertDocument(){if(docType.value==='tax'){alert('This is already a Tax Invoice.');return}let old=collect(),next=docType.value==='quotation'?'proforma':'tax';docType.value=next;docNo.value=nextNo(next,new Date(docDate.value||Date.now()),false);paymentStatus.value=next==='tax'?'Unpaid':'Not Applicable';notes.value=(notes.value?notes.value+'\n':'')+'Converted from '+old.no;renderPreview()}
 function printDoc(){renderPreview();window.print()}
 function selectCustomer(){let c=customers.find(x=>String(x.id)===customerSelect.value);if(!c)return;custName.value=c.name;custGstin.value=c.gstin;custState.value=c.state;custAddress.value=c.address;placeSupply.value=c.state;renderPreview()}
@@ -190,15 +264,15 @@ function renderCustomers(){customerList.innerHTML=customers.length?`<table><tr><
 function deleteCustomer(id){if(confirm('Delete customer?')){customers=customers.filter(x=>x.id!==id);store(K.customers,customers);renderCustomers();populateCustomers();updateDashboard()}}
 function populateCustomers(){customerSelect.innerHTML='<option value="">-- Select saved customer --</option>'+customers.map(c=>`<option value="${c.id}">${esc(c.name)}${c.gstin?' — '+esc(c.gstin):''}</option>`).join('')}
 function renderDocuments(){let q=(docSearch?.value||'').toLowerCase(),f=docFilter?.value||'',list=docs.filter(d=>(!f||d.type===f)&&(!q||(d.no+' '+d.customer.name+' '+d.customer.gstin).toLowerCase().includes(q)));documentList.innerHTML=list.length?`<table><tr><th>Date</th><th>Type</th><th>No.</th><th>Customer</th><th class="right">Total</th><th>Status</th><th></th></tr>${list.map(d=>`<tr><td>${esc(d.date)}</td><td>${docLabel(d.type)}</td><td><b>${esc(d.no)}</b></td><td>${esc(d.customer.name)}<br><span class="small">${esc(d.customer.gstin)}</span></td><td class="right">${money(d.total)}</td><td><span class="badge">${esc(d.payment||'')}</span></td><td><button class="btn" onclick="loadDocument(${d.id})">Open</button> <button class="btn red" onclick="deleteDocument(${d.id})">Delete</button></td></tr>`).join('')}</table>`:'No documents found.'}
-function loadDocument(id){let d=docs.find(x=>x.id===id);if(!d)return;showView('create');docType.value=d.type;docNo.value=d.no;docDate.value=d.date;dueDate.value=d.due;custName.value=d.customer.name;custGstin.value=d.customer.gstin;custState.value=d.customer.state;custAddress.value=d.customer.address;placeSupply.value=d.place;reverseCharge.value=d.reverse;reference.value=d.reference;paymentStatus.value=d.payment;terms.value=d.terms;notes.value=d.notes;items=JSON.parse(JSON.stringify(d.items));renderItemEditor();renderPreview()}
-function deleteDocument(id){if(confirm('Delete this document?')){docs=docs.filter(x=>x.id!==id);store(K.docs,docs);renderDocuments();updateDashboard()}}
+function loadDocument(id){let d=docs.find(x=>x.id===id);if(!d)return;editingId=d.id;showView('create');docType.value=d.type;docNo.value=d.no;docDate.value=d.date;dueDate.value=d.due;custName.value=d.customer.name;custGstin.value=d.customer.gstin;custState.value=d.customer.state;custAddress.value=d.customer.address;placeSupply.value=d.place;reverseCharge.value=d.reverse;reference.value=d.reference;paymentStatus.value=d.payment;terms.value=d.terms;notes.value=d.notes;items=JSON.parse(JSON.stringify(d.items));renderItemEditor();renderPreview()}
+function deleteDocument(id){if(confirm('Permanently delete this document? Export a backup first if needed.')){const updated=docs.filter(x=>x.id!==id);if(!store(K.docs,updated))return;docs=updated;if(editingId===id)editingId=null;renderDocuments();updateDashboard()}}
 function updateDashboard(){statCustomers.textContent=customers.length;statQuotes.textContent=docs.filter(x=>x.type==='quotation').length;statProforma.textContent=docs.filter(x=>x.type==='proforma').length;statInvoices.textContent=docs.filter(x=>x.type==='tax').length;recentDocs.innerHTML=docs.slice(0,8).map(d=>`<div style="padding:8px;border-bottom:1px solid #eee"><b>${esc(d.no)}</b> — ${esc(d.customer.name)} <span style="float:right">${money(d.total)}</span></div>`).join('')||'No documents yet.'}
 function fillSettings(){sName.value=settings.name;sTagline.value=settings.tagline||'IT SERVICES';sGstin.value=settings.gstin;sState.value=settings.state;sWebsite.value=settings.website;sAddress.value=settings.address;sPhone.value=settings.phone;sEmail.value=settings.email;sBank.value=settings.bank;sAccountName.value=settings.accountName;sAccount.value=settings.account;sIfsc.value=settings.ifsc;sGst.value=settings.gst;sPassword.value=''}
-function saveSettings(){Object.assign(settings,{name:sName.value,tagline:sTagline.value,gstin:sGstin.value.toUpperCase(),state:sState.value,website:sWebsite.value,address:sAddress.value,phone:sPhone.value,email:sEmail.value,bank:sBank.value,accountName:sAccountName.value,account:sAccount.value,ifsc:sIfsc.value,gst:+sGst.value||18});if(sPassword.value)settings.password=sPassword.value;store(K.settings,settings);alert('Settings saved.');renderPreview()}
+async function saveSettings(){Object.assign(settings,{name:sName.value,tagline:sTagline.value,gstin:sGstin.value.toUpperCase(),state:sState.value,website:sWebsite.value,address:sAddress.value,phone:sPhone.value,email:sEmail.value,bank:sBank.value,accountName:sAccountName.value,account:sAccount.value,ifsc:sIfsc.value,gst:+sGst.value||18});try{if(sPassword.value)await setLocalPassword(sPassword.value);delete settings.password;store(K.settings,settings);sPassword.value='';alert('Settings saved.');renderPreview()}catch(e){alert('Settings not saved: '+e.message)}}
 function loadAsset(e,type){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{settings[type]=r.result;store(K.settings,settings);renderPreview()};r.readAsDataURL(f)}
-function exportData(){let blob=new Blob([JSON.stringify({version:3,settings,customers,docs,counters:load(K.counters,{})},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='RamaMano-Invoice-Backup-'+dateISO(new Date())+'.json';a.click();URL.revokeObjectURL(a.href)}
-function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!confirm('Restore this backup and replace current local data?'))return;settings=d.settings||defaults;customers=d.customers||[];docs=d.docs||[];store(K.settings,settings);store(K.customers,customers);store(K.docs,docs);store(K.counters,d.counters||{});refreshAll();alert('Backup restored.')}catch(err){alert('Invalid backup file.')}};r.readAsText(f)}
+function exportData(){let blob=new Blob([JSON.stringify({version:7,settings:{...settings,password:undefined},customers,docs,counters:load(K.counters,{})},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='RamaMano-Invoice-Backup-'+dateISO(new Date())+'.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!confirm('This will REPLACE existing local records. Export a backup of current records first. Continue?'))return;settings={...defaults,...(d.settings||{})};delete settings.password;customers=d.customers||[];docs=d.docs||[];store(K.settings,settings);store(K.customers,customers);store(K.docs,docs);store(K.counters,d.counters||{});editingId=null;refreshAll();newDocument();alert('Backup restored. '+docs.length+' documents available.')}catch(err){alert('Invalid backup file.')}};r.readAsText(f)}
 function refreshAll(){populateCustomers();renderCustomers();renderDocuments();updateDashboard();fillSettings()}
 document.addEventListener('input',e=>{if(e.target.closest('#create')&&!e.target.closest('#itemEditor'))renderPreview()});
-if(sessionStorage.getItem(K.auth)==='1')openApp();
+if(sessionStorage.getItem(K.auth)==='1' && localStorage.getItem(K.credential))openApp();
 </script></body></html>
